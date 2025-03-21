@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Importa a biblioteca Flutter para UI
+import 'package:vertex/main_layout.dart';
 
 // Cria a tela do contador
 class ContadorPage extends StatefulWidget {
@@ -21,31 +22,27 @@ class _ContadorPageState extends State<ContadorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Contador',
-          style: TextStyle(color: Colors.white), // Cor do texto
-        ),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white, // Define o ícone do menu como branco
-      ),
-      body: Center(
+    return MainLayout(
+      title: 'Contador',
+      child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Centraliza os elementos na tela
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('Você pressionou o botão este número de vezes:'), // Texto fixo
+            const Text('Você pressionou o botão este número de vezes:'),
             Text(
-              '$_counter', // Mostra o valor do contador
-              style: Theme.of(context).textTheme.headlineMedium, // Define o tamanho do texto
+              '$_counter',
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineMedium,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton( // Botão flutuante
-        onPressed: _incrementCounter, // Quando pressionado, chama a função _incrementCounter
-        tooltip: 'Incrementar', // Mensagem ao passar o mouse
-        child: const Icon(Icons.add), // Ícone de "+"
+      floatingActionButton: FloatingActionButton( // Botão flutuante adicionado corretamente
+        onPressed: _incrementCounter,
+        tooltip: 'Incrementar',
+        child: const Icon(Icons.add),
       ),
     );
   }

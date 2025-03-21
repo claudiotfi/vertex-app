@@ -9,7 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  sqflite: ^2.3.0
+  path_provider: ^2.1.2
   cupertino_icons: ^1.0.8
+  sqflite_common_ffi: ^2.3.5
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +26,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+    - assets/logo-inverse.png
 
 flutter_icons:
   android: true

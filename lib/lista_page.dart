@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart'; // Importa a biblioteca Flutter para UI
+import 'package:vertex/main_layout.dart';
 
-// Cria a tela da lista de itens
 class ListaPage extends StatelessWidget {
   const ListaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Lista de itens que serão exibidos na tela
     final List<String> itens = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Lista de Itens',
-          style: TextStyle(color: Colors.white), // Cor do texto
-        ),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white, // Define o ícone do menu como branco
-      ),
-      body: ListView.builder( // Cria uma lista que se ajusta automaticamente
+    return MainLayout(
+      title: 'Listas', // Define o título
+      child: ListView.builder( // Cria uma lista que se ajusta automaticamente
         itemCount: itens.length, // Define quantos itens a lista tem
         itemBuilder: (context, index) {
           return ListTile(
