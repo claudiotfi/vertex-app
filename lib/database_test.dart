@@ -1,40 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:vertex/main_layout.dart';
-
-void main() {
-  runApp(TestDatabaseApp());
-}
-
-class TestDatabaseApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DatabaseTestPage(),
-    );
-  }
-}
 
 class DatabaseTestPage extends StatefulWidget {
+  const DatabaseTestPage({super.key});
+
   @override
   _DatabaseTestPageState createState() => _DatabaseTestPageState();
 }
 
 class _DatabaseTestPageState extends State<DatabaseTestPage> {
-  Database? _database;
   String _statusMessage = "Pressione o botão para testar o banco de dados";
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeDatabase();
-  }
-
-  Future<void> _initializeDatabase() async {
+  Future<void> _testDatabase() async {
     try {
+      // Abre o banco de dados usando o sqflite padrão
       String path = join(await getDatabasesPath(), 'test.db');
-      _database = await openDatabase(
+      var database = await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
@@ -46,87 +28,51 @@ class _DatabaseTestPageState extends State<DatabaseTestPage> {
           );
         },
       );
-      setState(() {
-        _statusMessage = "Banco de dados inicializado com sucesso!";
-      });
-    } catch (e) {
-      setState(() {
-        _statusMessage = "Erro ao inicializar o banco: $e";
-      });
-    }
-  }
 
-  Future<void> _insertTestData() async {
-    if (_database == null) {
-      setState(() {
-        _statusMessage = "Erro: Banco de dados não inicializado!";
-      });
-      return;
-    }
-
-    try {
-      await _database!.insert(
+      // Insere um dado de teste
+      await database.insert(
         'test_table',
         {'value': 'Teste SQLite'},
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      setState(() {
-        _statusMessage = "Dados inseridos com sucesso!";
-      });
-    } catch (e) {
-      setState(() {
-        _statusMessage = "Erro ao inserir dados: $e";
-      });
-    }
-  }
 
-  Future<void> _readTestData() async {
-    if (_database == null) {
-      setState(() {
-        _statusMessage = "Erro: Banco de dados não inicializado!";
-      });
-      return;
-    }
+      // Lê o dado inserido
+      List<Map<String, dynamic>> result = await database.query('test_table');
+      await database.close();
 
-    try {
-      List<Map<String, dynamic>> result = await _database!.query('test_table');
       if (result.isNotEmpty) {
         setState(() {
-          _statusMessage = "Dados recuperados: ${result[0]['value']}";
+          _statusMessage = "Sucesso! Dado inserido e lido: ${result[0]['value']}";
         });
       } else {
         setState(() {
-          _statusMessage = "Nenhum dado encontrado!";
+          _statusMessage = "Erro: Nenhum dado encontrado após inserção.";
         });
       }
     } catch (e) {
       setState(() {
-        _statusMessage = "Erro ao ler dados: $e";
+        _statusMessage = "Erro ao testar o banco de dados: $e";
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MainLayout(
-      title: 'Teste SQLite', // Define o título
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               _statusMessage,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _insertTestData,
-              child: Text('Inserir Dados'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _readTestData,
-              child: Text('Ler Dados'),
+              onPressed: _testDatabase,
+              child: const Text('Testar Banco de Dados'),
             ),
           ],
         ),

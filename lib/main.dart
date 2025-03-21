@@ -7,11 +7,14 @@ import 'package:vertex/database_test.dart';
 import 'package:vertex/tasks_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vertex/main_layout.dart';
+import 'dart:io' show Platform;
 
 void main() {
-  // Para Linux e Windows, inicializar corretamente o SQLite
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  // Configura o sqflite_common_ffi apenas para plataformas desktop
+  if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   runApp(const MyApp());
 }
 
@@ -24,13 +27,12 @@ class MyApp extends StatelessWidget {
       home: MainLayout(
         title: 'Dashboard',
         child: const HomeContent(),
-        isHomePage: true, // Define como página inicial
+        isHomePage: true,
       ),
     );
   }
 }
 
-// Conteúdo da HomePage separado como um widget independente
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
@@ -38,8 +40,8 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Mantém a altura apenas necessária
-        mainAxisAlignment: MainAxisAlignment.center, // Centraliza verticalmente
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'Bem Vindo!',
@@ -48,7 +50,7 @@ class HomeContent extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 20), // Adiciona um espaço entre o texto e a imagem
+          SizedBox(height: 20),
           Image.asset(
             'assets/logo.png',
             width: 100,

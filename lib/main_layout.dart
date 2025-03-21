@@ -11,15 +11,13 @@ import 'package:vertex/main.dart'; // Importa HomeContent
 class MainLayout extends StatefulWidget {
   final String title;
   final Widget child;
-  final bool isHomePage; // Nova propriedade para identificar a HomePage
-  final Widget? floatingActionButton;
+  final bool isHomePage;
 
   const MainLayout({
     super.key,
     required this.title,
     required this.child,
-    this.isHomePage = false, // Padrão é false
-    this.floatingActionButton,
+    this.isHomePage = false,
   });
 
   @override
@@ -48,7 +46,7 @@ class _MainLayoutState extends State<MainLayout> {
             ),
                 (Route<dynamic> route) => false,
           );
-          return false; // Não fecha o app
+          return false;
         }
 
         final now = DateTime.now();
@@ -63,11 +61,11 @@ class _MainLayoutState extends State<MainLayout> {
               duration: exitDelay,
             ),
           );
-          return false; // Não fecha ainda
+          return false;
         }
 
         debugPrint('Exiting app');
-        return true; // Fecha o app
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -78,7 +76,6 @@ class _MainLayoutState extends State<MainLayout> {
           backgroundColor: Colors.blueAccent,
           foregroundColor: Colors.white,
         ),
-        floatingActionButton: widget.floatingActionButton,
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -105,52 +102,13 @@ class _MainLayoutState extends State<MainLayout> {
                   ),
                 ),
               ),
-              _buildMenuItem(
-                context,
-                Icons.dashboard,
-                'Dashboard',
-                MainLayout(
-                  title: 'Dashboard',
-                  child: const HomeContent(),
-                  isHomePage: true,
-                ),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.pages,
-                'Página Simples',
-                MainLayout(title: 'Página Simples', child: const SimplePage()),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.list,
-                'Lista',
-                MainLayout(title: 'Lista', child: const ListaPage()),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.plus_one,
-                'Contador',
-                MainLayout(title: 'Contador', child: const ContadorPage()),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.settings,
-                'Configurações',
-                MainLayout(title: 'Configurações', child: SettingsPage()),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.task,
-                'Tarefas',
-                MainLayout(title: 'Tarefas', child: TasksPage()),
-              ),
-              _buildMenuItem(
-                context,
-                Icons.checklist_rtl,
-                'DB Teste',
-                MainLayout(title: 'DB Teste', child: DatabaseTestPage()),
-              ),
+              _buildMenuItem(context, Icons.dashboard, 'Dashboard', const HomeContent()),
+              _buildMenuItem(context, Icons.pages, 'Página Simples', const SimplePage()),
+              _buildMenuItem(context, Icons.list, 'Lista', const ListaPage()),
+              _buildMenuItem(context, Icons.plus_one, 'Contador', const ContadorPage()),
+              _buildMenuItem(context, Icons.settings, 'Configurações', SettingsPage()),
+              _buildMenuItem(context, Icons.task, 'Tarefas', TasksPage()),
+              _buildMenuItem(context, Icons.checklist_rtl, 'DB Teste', DatabaseTestPage()),
             ],
           ),
         ),
@@ -167,7 +125,12 @@ class _MainLayoutState extends State<MainLayout> {
         Navigator.pop(context); // Fecha o drawer
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => page),
+          MaterialPageRoute(
+            builder: (context) => MainLayout(
+              title: text,
+              child: page,
+            ),
+          ),
         );
       },
     );
