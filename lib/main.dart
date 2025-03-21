@@ -33,15 +33,28 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MainLayout(
       title: 'Dashboard', // Define o título
-      child: const Center(
-        child: Text(
-          'Bem Vindo!',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Mantém a altura apenas necessária
+          mainAxisAlignment: MainAxisAlignment.center, // Centraliza verticalmente
+          children: [
+            Text(
+              'Bem Vindo!',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20), // Adiciona um espaço entre o texto e a imagem
+            Image.asset(
+              'assets/logo.png',
+              width: 100,
+              height: 100,
+            ),
+          ],
         ),
       ),
+
     );
   }
 }

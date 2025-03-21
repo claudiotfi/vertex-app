@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vertex/main_layout.dart';
+
+typedef Settings = Map<String, dynamic>;
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -16,86 +16,36 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _darkTheme = false;
   double _fontSize = 14.0;
 
-  Database? _database;
-
   @override
   void initState() {
     super.initState();
-    _initDatabase();
-  }
-
-  Future<void> _initDatabase() async {
-    try {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-
-      _database = await openDatabase(
-        p.join(await getDatabasesPath(), 'settings.db'),
-        onCreate: (db, version) {
-          return db.execute(
-            'CREATE TABLE settings(id INTEGER PRIMARY KEY, key TEXT UNIQUE, value TEXT)',
-          );
-        },
-        version: 1,
-      );
-      //_showMessage("Banco de dados inicializado com sucesso!", Colors.green);
-      _loadSettings();
-    } catch (e) {
-      _showMessage("Erro ao inicializar o banco: $e", Colors.red);
-    }
+    _loadSettings();
   }
 
   Future<void> _loadSettings() async {
-    if (_database == null) return;
-    final List<Map<String, dynamic>> maps = await _database!.query('settings');
-
-    for (var setting in maps) {
-      switch (setting['key']) {
-        case 'name':
-          _nameController.text = setting['value'];
-          break;
-        case 'email':
-          _emailController.text = setting['value'];
-          break;
-        case 'notifications':
-          _notificationsEnabled = setting['value'] == 'true';
-          break;
-        case 'darkTheme':
-          _darkTheme = setting['value'] == 'true';
-          break;
-        case 'fontSize':
-          _fontSize = double.tryParse(setting['value']) ?? 14.0;
-          break;
-      }
-    }
-    setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nameController.text = prefs.getString('name') ?? '';
+      _emailController.text = prefs.getString('email') ?? '';
+      _notificationsEnabled = prefs.getBool('notifications') ?? false;
+      _darkTheme = prefs.getBool('darkTheme') ?? false;
+      _fontSize = prefs.getDouble('fontSize') ?? 14.0;
+    });
   }
 
-  Future<void> _saveSettings(String key, String value) async {
-    try {
-      if (_database == null) {
-        _showMessage("Banco de dados não está pronto!", Colors.red);
-        return;
-      }
-
-      await _database!.insert(
-        'settings',
-        {'key': key, 'value': value},
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      _showMessage("Configuração salva com sucesso!", Colors.green);
-    } catch (e) {
-      _showMessage("Erro ao salvar configuração: $e", Colors.red);
-    }
+  Future<void> _saveSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', _nameController.text);
+    await prefs.setString('email', _emailController.text);
+    await prefs.setBool('notifications', _notificationsEnabled);
+    await prefs.setBool('darkTheme', _darkTheme);
+    await prefs.setDouble('fontSize', _fontSize);
+    _showMessage("Configurações salvas com sucesso!");
   }
 
-  void _showMessage(String message, Color color) {
+  void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: color,
-        duration: Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: Duration(seconds: 2)),
     );
   }
 
@@ -150,13 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                _saveSettings("name", _nameController.text);
-                _saveSettings("email", _emailController.text);
-                _saveSettings("notifications", _notificationsEnabled.toString());
-                _saveSettings("darkTheme", _darkTheme.toString());
-                _saveSettings("fontSize", _fontSize.toString());
-              },
+              onPressed: _saveSettings,
               child: Text('Salvar'),
             ),
           ],

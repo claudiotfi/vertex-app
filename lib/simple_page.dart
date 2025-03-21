@@ -14,7 +14,7 @@ class SimplePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Página Simples',
+              'Lorem ipsum dolor',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -22,21 +22,31 @@ class SimplePage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Texto da página simples',
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent volutpat, turpis et interdum eleifend, sem dolor dictum orci, quis viverra felis nulla ornare metus. Pellentesque posuere posuere urna ut auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at velit turpis. Donec eu rutrum mauris. Maecenas lobortis mauris sed turpis euismod feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed eget libero ipsum. ',
+              textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 18,
               ),
             ),
-
-            Image.asset(  // AGORA FUNCIONA!
-              'assets/logo.png',
-              width: 100,
-              height: 100,
+            const SizedBox(height: 8),
+            const Text(
+              'Ut porta arcu at',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 8),
+            const Text(
+              'Ut porta arcu at sapien condimentum, vel pellentesque mi eleifend. In hac habitasse platea dictumst. Aliquam a volutpat ex, ac efficitur nibh. Integer luctus leo ut leo lobortis, a condimentum velit tempor. Sed tristique rhoncus gravida. Nullam blandit metus volutpat felis posuere placerat. Mauris tortor turpis, fermentum laoreet leo et, viverra blandit tellus. Sed blandit, mauris eget consectetur lacinia, erat urna faucibus diam, sit amet convallis elit ipsum sed tellus. Praesent metus lorem, consectetur quis fermentum at, mollis id erat. ',
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
           ],
         ),
-
-
       ),
     );
   }
